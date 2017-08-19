@@ -278,5 +278,6 @@ namespace BotDiscordMultifunction.Modules
         {
             await Context.Channel.SendMessageAsync($"Wiki: https://wiki-fr.guildwars2.com/index.php?title=Sp%C3%A9cial%3ARecherche&profile=default&fulltext=Search&search={keyWord.Replace(" ", "+")}");
         }
+
     }
 }
