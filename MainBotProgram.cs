@@ -19,9 +19,6 @@ namespace BotDiscordMultifunction
         public async void connect()
         {
             Token = GetToken();
-            Console.WriteLine(Token);
-            Console.WriteLine(Settings.ApiKey);
-            Console.WriteLine(Settings.GuildId);
             Handler = new CommandHandler();
             Client = new DiscordSocketClient(new DiscordSocketConfig()
             {
@@ -40,14 +37,15 @@ namespace BotDiscordMultifunction
                 Console.WriteLine("Error occured while connecting your bot", "ERROR");
                 return;
             }
+            
             await Task.Delay(-1);
         }
 
         private async Task Client_MessageRecieved(SocketMessage arg)
         {
-            if(WantToPissOffEveryone)
+            if (WantToPissOffEveryone)
             {
-                if (arg.Author.Username.ToString() != "BlackMuhMuh_Bot")
+                if (arg.Author.Username.ToString() != Client.CurrentUser.Username)
                 {
                     var message = arg.Content;
                     char[] whitespace = new char[] { ' ', '\t' };
