@@ -4,22 +4,24 @@ using Discord;
 using Discord.WebSocket;
 using System.IO;
 using System.Collections.Generic;
+using BotDiscordMultifunction.Cfg;
 
 namespace BotDiscordMultifunction
 {
+    
     public class MainBotProgram
     {
+        public static bool WantToPissOffEveryone { get; set; } = false;
         static DiscordSocketClient Client;
         static CommandHandler Handler;
         static string Token;
-        Program prog = new Program();
+        Settings settings = new Settings();
         public async void connect()
         {
-            if(File.Exists(@"Token.txt"))
-            {
-                Token = GetToken();
-            }
-            else { File.Create(@"Token.txt"); Console.WriteLine("Can't find the Token, please check the Token.txt file"); Console.ReadLine();Token = null; }
+            Token = GetToken();
+            Console.WriteLine(Token);
+            Console.WriteLine(Settings.ApiKey);
+            Console.WriteLine(Settings.GuildId);
             Handler = new CommandHandler();
             Client = new DiscordSocketClient(new DiscordSocketConfig()
             {
@@ -43,29 +45,31 @@ namespace BotDiscordMultifunction
 
         private async Task Client_MessageRecieved(SocketMessage arg)
         {
-            if(arg.Author.Username.ToString() != "BlackMuhMuh_Bot")
+            if(WantToPissOffEveryone)
             {
-                var message = arg.Content;
-                char[] whitespace = new char[] { ' ', '\t' };
-                string[] messageTab = message.Split(whitespace);
-                List<string> listOfWord = new List<string>();
-                foreach (var s in messageTab)
+                if (arg.Author.Username.ToString() != "BlackMuhMuh_Bot")
                 {
-                    if(s.Contains("Di")|| s.Contains("di")|| s.Contains("Dy") || s.Contains("dy") || s.Contains("DI") || s.Contains("dI") || s.Contains("DY") || s.Contains("dY"))
+                    var message = arg.Content;
+                    char[] whitespace = new char[] { ' ', '\t' };
+                    string[] messageTab = message.Split(whitespace);
+                    List<string> listOfWord = new List<string>();
+                    foreach (var s in messageTab)
                     {
-                        listOfWord.Add(s);
+                        if (s.Contains("Di") || s.Contains("di") || s.Contains("Dy") || s.Contains("dy") || s.Contains("DI") || s.Contains("dI") || s.Contains("DY") || s.Contains("dY"))
+                        {
+                            listOfWord.Add(s);
+                        }
+
                     }
-                    
+                    string cutMessage = null;
+                    foreach (var ss in listOfWord)
+                    {
+                        cutMessage = cutMessage + " " + ss;
+                    }
+                    cutMessage = cutMessage.ToLower();
+                    await arg.Channel.SendMessageAsync(cutMessage.Replace("di", "").Replace("Di", "").Replace("Dy", "").Replace("dy", ""), true);
                 }
-                string cutMessage = null;
-                foreach(var ss in listOfWord)
-                {
-                    cutMessage = cutMessage + " " +ss;
-                }
-                cutMessage = cutMessage.ToLower();
-                await arg.Channel.SendMessageAsync(cutMessage.Replace("di","").Replace("Di","").Replace("Dy", "").Replace("dy", ""), true);
-            }
-            
+            } 
         }
 
         private Task Client_log(LogMessage arg)
@@ -76,12 +80,7 @@ namespace BotDiscordMultifunction
 
         private string GetToken()
         {
-            string line = null;
-            using (StreamReader sr = new StreamReader(@"Token.txt"))
-            {
-                return line = sr.ReadLine();
-            }   
-            
+            return Settings.Token; 
         }
     }
 }
