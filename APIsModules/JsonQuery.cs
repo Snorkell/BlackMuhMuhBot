@@ -1,25 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
 namespace BotDiscordMultifunction.APIsModules
 {
-    public class GW2DataQuery
+    public class JsonQuery 
     {
-        public static string[] GetDataFromUrl(string url, char splitChar)
+        public static string GetDataFromUrl(string url)
         {
-            string data;
             try
             {
                 using (var wb = new WebClient())
                 {
                     var response = wb.DownloadString(url);
-                    data = response;
+                    return response;
                 }
-                string[] splitStringOfDatas = data.Split(splitChar);
-                return splitStringOfDatas;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return null;
