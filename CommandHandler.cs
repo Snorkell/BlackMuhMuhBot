@@ -30,7 +30,7 @@ namespace BotDiscordMultifunction
             var context = new CommandContext(Client, msg);
             var result = await Commands.ExecuteAsync(context, argPos);
 
-            if (!result.IsSuccess) await context.Channel.SendMessageAsync(result.ErrorReason);
+            if (!result.IsSuccess) await context.Channel.SendMessageAsync(result.ErrorReason + "Type µhelp to get all the commands" );
         }
     }
 }
